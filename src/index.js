@@ -53,18 +53,18 @@ var parse = exports.parse = function () {
 
 
 /**
- * 获取当前 hashbang 的 path
- * @returns {*}
+ * 获取当前 hashbang 的 pathname
+ * @returns {String}
  */
-exports.getPath = function () {
-    return parse().path;
+exports.getPathname = function () {
+    return parse().pathname;
 };
 
 
 /**
  * 获取当前 hashbang 的 query
  * @param [key] {String} query 键名
- * @returns {Object|string|array}
+ * @returns {Object|string}
  */
 exports.getQuery = function (key) {
     var ret = parse().query;
@@ -78,13 +78,14 @@ exports.getQuery = function (key) {
 
 
 /**
- * 获取当前 hashbang 的 path
- * @parma path {string} path
+ * 获取当前 hashbang 的 pathname
+ * @parma pathname {string} pathname
  * @returns {string}
  */
-exports.setPath = function (path) {
+exports.setPathname = function (pathname) {
     var ret = parse();
-    ret.path = path;
+    ret.path = '';
+    ret.pathname = pathname;
     return setHashbang(hashstring.stringify(ret));
 };
 

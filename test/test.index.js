@@ -17,14 +17,15 @@ describe('测试文件', function () {
 
 
     it('.toString', function () {
-        expect(hashbang.toString()).toEqual('');
+        expect(hashbang.toString()).toEqual('/');
         buildURL(ha);
         expect(hashbang.toString()).toEqual(ha);
     });
 
     it('.parse', function () {
         expect(hashbang.parse()).toEqual({
-            path: '/a/b/c/',
+            path: '/a/b/c/?x=1&y=2&z=3',
+            pathname: '/a/b/c/',
             query: {
                 x: '1',
                 y: '2',
@@ -34,7 +35,7 @@ describe('测试文件', function () {
     });
 
     it('.get', function () {
-        expect(hashbang.getPath()).toEqual('/a/b/c/');
+        expect(hashbang.getPathname()).toEqual('/a/b/c/');
         expect(hashbang.getQuery()).toEqual({
             x: '1',
             y: '2',
@@ -42,8 +43,8 @@ describe('测试文件', function () {
         });
     });
 
-    it('.getPath', function () {
-        expect(hashbang.getPath()).toEqual('/a/b/c/');
+    it('.getPathname', function () {
+        expect(hashbang.getPathname()).toEqual('/a/b/c/');
     });
 
     it('.getQuery', function () {
@@ -52,8 +53,8 @@ describe('测试文件', function () {
         expect(hashbang.getQuery('z')).toEqual('3');
     });
 
-    it('.setPath', function () {
-        expect(hashbang.setPath('/o/p/q/')).toEqual('#!/o/p/q/?x=1&y=2&z=3');
+    it('.setPathname', function () {
+        expect(hashbang.setPathname('/o/p/q/')).toEqual('#!/o/p/q/?x=1&y=2&z=3');
     });
 
     it('.setQuery', function () {
