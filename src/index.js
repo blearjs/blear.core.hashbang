@@ -22,7 +22,7 @@ var reHashbang = /#!\/.*$/;
  * @returns {string}
  */
 var setHashbang = exports.set = function (hashbang) {
-    return '#!' + hashbang;
+    return location.href.split('#')[0] + '#!' + hashbang;
 };
 
 
