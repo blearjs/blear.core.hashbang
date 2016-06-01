@@ -54,7 +54,7 @@ describe('测试文件', function () {
     });
 
     it('.setPathname', function () {
-        expect(hashbang.setPathname('/o/p/q/')).toEqual('#!/o/p/q/?x=1&y=2&z=3');
+        expect(hashbang.setPathname('/o/p/q/')).toEqual(location.protocol + '//' + location.host + location.pathname + location.search + '#!/o/p/q/?x=1&y=2&z=3');
     });
 
     it('.setQuery', function () {
