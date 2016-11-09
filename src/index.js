@@ -54,9 +54,12 @@ var get = exports.get = function () {
  * @returns {{path, query}|{path: string, query: *}}
  */
 var parse = exports.parse = function () {
-    return object.filter(url.parse(get()), function (val, key) {
+    var ret = object.filter(url.parse(get()), function (val, key) {
         return PARSE_MAP[key];
     });
+
+    ret.path = ret.href;
+    return ret;
 };
 
 

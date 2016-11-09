@@ -30,6 +30,7 @@ describe('测试文件', function () {
         console.log(ret);
 
         expect(ret).toEqual({
+            path: '/a/b/c/?x=1&y=2&z=3',
             href: '/a/b/c/?x=1&y=2&z=3',
             pathname: '/a/b/c/',
             query: {
