@@ -10,19 +10,32 @@
 
 'use strict';
 
-var hashstring = require('blear.utils.hashstring');
-var url =        require('blear.utils.url');
+var hashbangUtil = require('blear.utils.hashbang');
+var url = require('blear.utils.url');
+var access = require('blear.utils.access');
+var typeis = require('blear.utils.typeis');
+var object = require('blear.utils.object');
 
-var reHashbang = /#!\/.*$/;
+var PARSE_MAP = {
+    href: 1,
+    pathname: 2,
+    query: 3
+};
 
 
 /**
  * 设置 hash
  * @param hashbang
+ * @param [split] {String} 分隔符
  * @returns {string}
  */
-var setHashbang = exports.set = function (hashbang) {
-    return location.href.split('#')[0] + '#!' + hashbang;
+var set = exports.set = function (hashbang, split) {
+    return location.href.split('#')[0] + hashbangUtil.stringify(hashbang, split);
+};
+
+
+var setHashbang = function (ret, split) {
+    return set(url.stringify(ret), split);
 };
 
 
@@ -31,15 +44,8 @@ var setHashbang = exports.set = function (hashbang) {
  * @type {Function}
  * @returns {String}
  */
-var getString = exports.toString = function () {
-    var matches = location.hash.match(reHashbang);
-
-    if (!matches) {
-        return '/';
-    }
-
-    // 移除“#!”
-    return matches[0].slice(2);
+var get = exports.get = function () {
+    return hashbangUtil.parse(location.hash);
 };
 
 
@@ -48,7 +54,9 @@ var getString = exports.toString = function () {
  * @returns {{path, query}|{path: string, query: *}}
  */
 var parse = exports.parse = function () {
-    return hashstring.parse(getString());
+    return object.filter(url.parse(get()), function (val, key) {
+        return PARSE_MAP[key];
+    });
 };
 
 
@@ -80,13 +88,14 @@ exports.getQuery = function (key) {
 /**
  * 获取当前 hashbang 的 pathname
  * @parma pathname {string} pathname
+ * @param [split] {String} 分隔符
  * @returns {string}
  */
-exports.setPathname = function (pathname) {
+exports.setPathname = function (pathname, split) {
     var ret = parse();
     ret.path = '';
     ret.pathname = pathname;
-    return setHashbang(hashstring.stringify(ret));
+    return setHashbang(ret, split);
 };
 
 
@@ -94,22 +103,34 @@ exports.setPathname = function (pathname) {
  * 设置当前 hashbang 的 query
  * @param key {String|Object} query 键名、键值对、字符串
  * @param [val] {String|Array|Number|Boolean} query 键值
+ * @param [split] {String} 分隔符
  * @returns {string}
  */
-exports.setQuery = function (key, val) {
-    var ret = url.assignQuery(getString(), key, val);
-    return setHashbang(ret);
+exports.setQuery = function (key, val, split) {
+    var args = access.args(arguments);
+
+    // .setQuery({a: b});
+    // .setQuery("a=b");
+    // .setQuery("a", "b");
+    // .setQuery({a: b}, "c");
+    // .setQuery("a", "b", "c");
+    if (args.length === 2 && typeis.Object(args[0])) {
+        split = args[1];
+    }
+
+    var ret = url.setQuery(get(), key, val);
+    return set(ret, split);
 };
 
 
 /**
  * 移除当前 hashbang 的 query
  * @param key {String} query 键名
+ * @param [split] {String} 分隔符
  * @returns {string}
  */
-exports.removeQuery = function (key) {
-    var ret = parse();
-    ret.query[key] = null;
-    return setHashbang(hashstring.stringify(ret));
+exports.removeQuery = function (key, split) {
+    var ret = url.removeQuery(get(), key);
+    return set(ret, split);
 };
 
