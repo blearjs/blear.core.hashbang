@@ -10,7 +10,7 @@
 
 'use strict';
 
-var hashbangUtil = require('blear.utils.hashbang');
+var util = require('blear.utils.hashbang');
 var url = require('blear.utils.url');
 var access = require('blear.utils.access');
 var typeis = require('blear.utils.typeis');
@@ -19,18 +19,19 @@ var object = require('blear.utils.object');
 var PARSE_MAP = {
     href: 1,
     pathname: 2,
-    query: 3
+    querystring: 3,
+    query: 4
 };
 
 
 /**
  * 设置 hash
- * @param hashbang
+ * @param path
  * @param [split] {String} 分隔符
  * @returns {string}
  */
-var set = exports.set = function (hashbang, split) {
-    return location.href.split('#')[0] + hashbangUtil.stringify(hashbang, split);
+var set = exports.set = function (path, split) {
+    return location.href.split('#')[0] + util.stringify(path, split);
 };
 
 
@@ -45,7 +46,7 @@ var setHashbang = function (ret, split) {
  * @returns {String}
  */
 var get = exports.get = function () {
-    return hashbangUtil.parse(location.hash);
+    return util.parse(location.hash);
 };
 
 
@@ -90,7 +91,7 @@ exports.getQuery = function (key) {
 
 /**
  * 获取当前 hashbang 的 pathname
- * @parma pathname {string} pathname
+ * @param pathname {string} 路径名称
  * @param [split] {String} 分隔符
  * @returns {string}
  */
